@@ -1,15 +1,53 @@
 class Quiz {
-    // YOUR CODE HERE:
-    //
-    // 1. constructor (questions, timeLimit, timeRemaining)
+  // YOUR CODE HERE:
 
-    // 2. getQuestion()
-    
-    // 3. moveToNextQuestion()
+  constructor(questions, timeLimit, timeRemaining) {
+    this.questions = questions;
+    this.timeLimit = timeLimit;
+    this.timeRemaining = timeRemaining;
+    this.correctAnswers = 0;
+    this.currentQuestionIndex = 0;
+  }
 
-    // 4. shuffleQuestions()
+  getQuestion() {
+    return this.questions[this.currentQuestionIndex];
+  }
 
-    // 5. checkAnswer(answer)
+  moveToNextQuestion() {
+    this.currentQuestionIndex++;
+  }
 
-    // 6. hasEnded()
+  shuffleQuestions() {
+    // Make a copy of the original array
+    let questionsCopy = this.questions.slice();
+    let numElements = questionsCopy.length;
+    let shuffledQuestions = [];
+
+    while (numElements > 0) {
+      // Generate a random index based on the remaining elements
+      let randomIndex = Math.floor(Math.random() * numElements);
+      numElements--; // Decrement for the next iteration
+
+      // Pull the element from the copied array and push it into the shuffled array
+      let [removedElement] = questionsCopy.splice(randomIndex, 1);
+      shuffledQuestions.push(removedElement);
+    }
+
+    // Set the original questions to the new shuffled array
+    this.questions = shuffledQuestions;
+  }
+
+  checkAnswer(answer) {
+    if (answer === this.questions[this.currentQuestionIndex].answer) {
+      this.correctAnswers++;
+    }
+  }
+
+  hasEnded() {
+    if (this.currentQuestionIndex < this.questions.length) {
+      return false;
+    } else if (this.currentQuestionIndex === this.questions.length) {
+      return true;
+    }
+  }
 }
