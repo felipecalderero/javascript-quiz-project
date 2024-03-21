@@ -64,8 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
 
   // Display the time remaining in the time remaining container
-  const timeRemainingContainer = document.getElementById("timeRemaining");
-  timeRemainingContainer.innerText = `${minutes}:${seconds}`;
 
   // Show first question
   showQuestion();
@@ -73,6 +71,27 @@ document.addEventListener("DOMContentLoaded", () => {
   /************  TIMER  ************/
 
   let timer;
+  console.log(quiz.timeRemaining);
+  //quiz.timeRemaining = 3;
+  setTimer();
+
+  function setTimer() {
+    const timeRemainingContainer = document.getElementById("timeRemaining");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+    timer = setInterval(function () {
+      if (quiz.timeRemaining > 0) {
+        quiz.timeRemaining -= 1;
+
+        const minutes = Math.floor(quiz.timeRemaining / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+        timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+      } else {
+        showResults();
+      }
+    }, 1000);
+  }
 
   /************  EVENT LISTENERS  ************/
 
@@ -89,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // If the quiz has ended, show the results
     if (quiz.hasEnded()) {
       showResults();
+
       return;
     }
 
@@ -175,12 +195,19 @@ document.addEventListener("DOMContentLoaded", () => {
     quiz.currentQuestionIndex = 0;
     quiz.correctAnswers = 0;
     quiz.shuffleQuestions();
+    quiz.timeRemaining = quiz.timeLimit;
+    setTimeout(200);
+    console.log("Time limit", quiz.timeLimit);
+    console.log("Time remaining", quiz.timeRemaining);
+    setTimer();
     showQuestion();
   }
 
   function showResults() {
     // YOUR CODE HERE:
     //
+
+    clearTimeout(timer);
     // 1. Hide the quiz view (div#quizView)
     quizView.style.display = "none";
 
